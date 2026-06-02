@@ -1,16 +1,17 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
 import { apiLimiter } from "./middleware/rateLimiter.js";
+import connectDB from "./config/db.js";
 
-dotenv.config({ path: "../.env" });
+// Load env — Vercel injects env vars automatically in production
+dotenv.config();
 
 const app = express();
 
-// ── Middleware ───────────────────────────────────────────
+// ── Middleware ────────────────────────────────────────────
 app.use(
   cors({
     origin: [
@@ -25,15 +26,15 @@ app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use("/api", apiLimiter);
 
-// ── DB connect (cached for serverless) ───────────────────
-let isConnected = false;
-const connectOnce = async () => {
-  if (!isConnected) {
+// ── DB — cached connection for serverless ─────────────────
+let dbConnected = false;
+const ensureDB = async () => {
+  if (!dbConnected && process.env.MONGO_URI) {
     await connectDB();
-    isConnected = true;
+    dbConnected = true;
   }
 };
-connectOnce();
+ensureDB().catch(console.error);
 
 // ── Routes ────────────────────────────────────────────────
 app.get("/", (_, res) =>
@@ -54,7 +55,7 @@ app.use((req, res) => {
 // ── Error handler ─────────────────────────────────────────
 app.use(errorHandler);
 
-// ── Local dev only ────────────────────────────────────────
+// ── Local dev ────────────────────────────────────────────
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () =>
@@ -62,5 +63,4 @@ if (process.env.NODE_ENV !== "production") {
   );
 }
 
-// ── Export for Vercel serverless ──────────────────────────
 export default app;
