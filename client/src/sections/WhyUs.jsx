@@ -2,10 +2,10 @@ import { useRef, useState } from "react"
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from "framer-motion"
 
 const stats = [
-  { num: "0+", label: "Projects Delivered", color: "teal"  },
-  { num: "0",  label: "Client Satisfaction", color: "amber" },
-  { num: "0",  label: "Happy Clients",        color: "teal"  },
-  { num: "0",   label: "Years of Expertise",   color: "amber" },
+  { num: "5+", label: "Projects Delivered", color: "teal"  },
+  { num: "100%",  label: "Client Satisfaction", color: "amber" },
+  { num: "100%",  label: "Happy Clients",        color: "teal"  },
+  { num: "3",   label: "Years of Expertise",   color: "amber" },
 ]
 
 const reasons = [
