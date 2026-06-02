@@ -4,11 +4,12 @@
   "description": "Market Mitra Backend API",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": ">=20.x"
+  },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "lint": "eslint ."
-    
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
