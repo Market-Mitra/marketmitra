@@ -250,7 +250,7 @@ export default function ServiceDetail() {
 
         {/* Back */}
         <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-          <Link to="/services" data-cursor="hover"
+          {/* <Link to="/services" data-cursor="hover"
             className="inline-flex items-center gap-2 text-warm/40 hover:text-warm text-sm transition-colors duration-200 mb-10 group"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
@@ -258,7 +258,7 @@ export default function ServiceDetail() {
               <path d="M19 12H5M12 5l-7 7 7 7"/>
             </svg>
             All Services
-          </Link>
+          </Link> */}
         </motion.div>
 
         {/* Hero */}
