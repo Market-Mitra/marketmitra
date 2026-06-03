@@ -22,6 +22,9 @@ const initialForm = {
   message: "",
 }
 
+// ── API URL ───────────────────────────────────────────────
+const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "https://marketmitra-venf.vercel.app/api"
+
 export default function Contact() {
   const sectionRef = useRef(null)
   const formRef    = useRef(null)
@@ -67,41 +70,39 @@ export default function Contact() {
   }
 
   const handleSubmit = async (e) => {
-  e.preventDefault()
-  const errs = validate(form)
-  if (Object.keys(errs).length > 0) {
-    setErrors(errs)
-    setTouched({ name: true, email: true, subject: true, message: true, service: true })
-    return
-  }
-
-  setStatus("loading")
-  try {
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api"
-
-    const res = await fetch(`${apiUrl}/contact`, {
-      method:  "POST",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify(form),
-    })
-
-    if (!res.ok) {
-      const text = await res.text()
-      let message = "Something went wrong"
-      try { message = JSON.parse(text).message } catch {}
-      throw new Error(message)
+    e.preventDefault()
+    const errs = validate(form)
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs)
+      setTouched({ name: true, email: true, subject: true, message: true, service: true })
+      return
     }
 
-    const data = await res.json()
-    setStatus("success")
-    setForm(initialForm)
-    setTouched({})
-    setErrors({})
-  } catch (err) {
-    console.error("Submit error:", err.message)
-    setStatus("error")
+    setStatus("loading")
+    try {
+      const res = await fetch(`${API_URL}/contact`, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(form),
+      })
+
+      if (!res.ok) {
+        const text = await res.text()
+        let message = "Something went wrong"
+        try { message = JSON.parse(text).message } catch {}
+        throw new Error(message)
+      }
+
+      await res.json()
+      setStatus("success")
+      setForm(initialForm)
+      setTouched({})
+      setErrors({})
+    } catch (err) {
+      console.error("Submit error:", err.message)
+      setStatus("error")
+    }
   }
-}
 
   const inputClass = (field) => `
     w-full bg-warm/5 border rounded-xl px-4 py-3.5 text-warm text-sm
@@ -170,7 +171,6 @@ export default function Contact() {
               <div className="flex flex-col gap-5">
                 {[
                   { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>, label: "Email", value: "connectmarketmitra@gmail.com", href: "mailto:connectmarketmitra@gmail.com" },
-                  // { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 2.68h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.18a16 16 0 0 0 6 6l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17.5z"/></svg>, label: "Phone", value: "+91 98765 43210", href: "tel:+919876543210" },
                   { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>, label: "Location", value: "Nagpur, Maharashtra · India", href: null },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
