@@ -7,7 +7,7 @@ const fadeUp = (delay = 0) => ({
 })
 
 const stats = [
-  { num: "200+", label: "Projects Delivered" },
+  { num: "10+", label: "Projects Delivered" },
   { num: "98%",  label: "Client Satisfaction" },
   { num: "5+",   label: "Years of Expertise" },
 ]
@@ -176,7 +176,7 @@ export default function Hero() {
       </motion.div>
 
       {/* Scroll indicator */}
-      <motion.div
+      {/* <motion.div
         {...fadeUp(1.2)}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
@@ -187,7 +187,7 @@ export default function Hero() {
           className="w-px h-8"
           style={{ background: "linear-gradient(to bottom, rgba(244,243,239,0.3), transparent)" }}
         />
-      </motion.div>
+      </motion.div> */}
     </section>
   )
 }
