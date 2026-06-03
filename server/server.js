@@ -9,21 +9,35 @@ dotenv.config();
 
 const app = express();
 
-// ── Middleware ────────────────────────────────────────────
+// ── CORS ──────────────────────────────────────────────────
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.CLIENT_URL, // e.g. https://marketmitra-kappa.vercel.app
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      process.env.CLIENT_URL,
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    methods: ["GET", "POST", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
+
+// Handle OPTIONS preflight for all routes
+app.options("*", cors());
+
+// ── Middleware ────────────────────────────────────────────
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-// ── Rate limiter ──────────────────────────────────────────
+// ── Rate limiters ─────────────────────────────────────────
 const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 5,
@@ -212,20 +226,16 @@ app.post("/api/contact", contactLimiter, async (req, res) => {
       sendAutoReply({ name, email, message, service }),
     ]);
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Message received! We'll get back to you within 24 hours.",
-      });
+    res.status(201).json({
+      success: true,
+      message: "Message received! We'll get back to you within 24 hours.",
+    });
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to send message. Please try again.",
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to send message. Please try again.",
+    });
   }
 });
 
