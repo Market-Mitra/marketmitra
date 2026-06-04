@@ -169,7 +169,7 @@ export default function About() {
             viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.5 }}
             className="mt-16 text-warm/20 text-xs uppercase tracking-[0.2em]"
           >
-            Nagpur, Maharashtra · Est. 2024 · Tech & Marketing
+            Nagpur, Maharashtra · Est. 2026 · Tech & Marketing
           </motion.p>
         </motion.div>
       </div>
