@@ -6,6 +6,8 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     chunkSizeWarningLimit: 600,
+    target: "esnext", // smaller output
+    minify: "esbuild", // faster minification
     rollupOptions: {
       output: {
         manualChunks(id) {
