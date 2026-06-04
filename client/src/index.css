@@ -33,7 +33,6 @@
     transform: translateX(-100%);
   }
 }
-
 @keyframes marquee2 {
   0% {
     transform: translateX(100%);
@@ -42,7 +41,6 @@
     transform: translateX(0%);
   }
 }
-
 @keyframes fadeUp {
   0% {
     opacity: 0;
@@ -61,15 +59,16 @@
     box-sizing: border-box;
   }
 
+  /* NO scroll-behavior: smooth here — causes navigation latency */
   html {
-    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     background-color: var(--color-warm);
     color: var(--color-navy);
     font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
   }
 
   h1,
@@ -98,10 +97,14 @@
       padding: 5rem 4rem;
     }
   }
-
   @media (min-width: 1024px) {
     .section-padding {
       padding: 5rem 6rem;
     }
+  }
+
+  /* Smooth scroll only for anchor links within a page */
+  .smooth-scroll {
+    scroll-behavior: smooth;
   }
 }
